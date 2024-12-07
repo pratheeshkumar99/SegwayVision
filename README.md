@@ -42,42 +42,52 @@ The FCN architecture transforms traditional classification networks into fully c
 ### 2. U-Net Architecture
 
 ```mermaid
-[graph TB
-    subgraph "Encoder Path"
-        I[Input Image] --> C1[Conv 3x3]
-        C1 --> C2[Conv 3x3]
-        C2 --> P1[MaxPool]
-        P1 --> C3[Conv 3x3]
-        C3 --> C4[Conv 3x3]
-        C4 --> P2[MaxPool]
-        P2 --> C5[Conv 3x3]
-        C5 --> C6[Conv 3x3]
-    end
+[<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="800" height="400" fill="#ffffff"/>
     
-    subgraph "Bottleneck"
-        C6 --> P3[MaxPool]
-        P3 --> B1[Conv 3x3]
-        B1 --> B2[Conv 3x3]
-    end
-    
-    subgraph "Decoder Path"
-        B2 --> U1[UpConv 2x2]
-        U1 --> CC1[Concat]
-        CC1 --> D1[Conv 3x3]
-        D1 --> D2[Conv 3x3]
-        D2 --> U2[UpConv 2x2]
-        U2 --> CC2[Concat]
-        CC2 --> D3[Conv 3x3]
-        D3 --> D4[Conv 3x3]
-        D4 --> O[Output]
-    end
-    
-    %% Skip Connections
-    C2 -.- CC2
-    C4 -.- CC1
-    
-    style I fill:#f9f,stroke:#333
-    style O fill:#9ff,stroke:#333]
+    <!-- Encoder Path -->
+    <g fill="#e6f3ff" stroke="#2980b9" stroke-width="2">
+        <!-- Input -->
+        <rect x="50" y="175" width="60" height="50" rx="5"/>
+        <!-- Conv Blocks -->
+        <rect x="130" y="150" width="60" height="100" rx="5"/>
+        <rect x="210" y="125" width="60" height="150" rx="5"/>
+        <rect x="290" y="100" width="60" height="200" rx="5"/>
+    </g>
+
+    <!-- Bottleneck -->
+    <rect x="370" y="175" width="60" height="50" fill="#fff3e6" stroke="#e67e22" stroke-width="2" rx="5"/>
+
+    <!-- Decoder Path -->
+    <g fill="#e6ffe6" stroke="#27ae60" stroke-width="2">
+        <!-- Upconv Blocks -->
+        <rect x="450" y="100" width="60" height="200" rx="5"/>
+        <rect x="530" y="125" width="60" height="150" rx="5"/>
+        <rect x="610" y="150" width="60" height="100" rx="5"/>
+        <!-- Output -->
+        <rect x="690" y="175" width="60" height="50" rx="5"/>
+    </g>
+
+    <!-- Skip Connections -->
+    <g stroke="#95a5a6" stroke-width="2" stroke-dasharray="5,5">
+        <path d="M 240 150 L 500 150"/>
+        <path d="M 320 125 L 480 125"/>
+    </g>
+
+    <!-- Labels -->
+    <g font-family="Arial" font-size="12" fill="#333">
+        <text x="55" y="205">Input</text>
+        <text x="135" y="205">Conv1</text>
+        <text x="215" y="205">Conv2</text>
+        <text x="295" y="205">Conv3</text>
+        <text x="375" y="205">Bridge</text>
+        <text x="455" y="205">Up3</text>
+        <text x="535" y="205">Up2</text>
+        <text x="615" y="205">Up1</text>
+        <text x="695" y="205">Output</text>
+    </g>
+</svg>]
 
 U-Net features a symmetric encoder-decoder structure that's particularly effective for detailed segmentation:
 - Contracting path (encoder) captures context
