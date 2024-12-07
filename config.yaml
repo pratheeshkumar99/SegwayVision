@@ -1,0 +1,7 @@
+# config.yaml
+MODEL_TYPE: 'unet'
+BACKBONE: 'resnet34'
+NUM_CLASSES: 8
+BATCH_SIZE: 16
+EPOCHS: 5
+LEARNING_RATE: 0.01

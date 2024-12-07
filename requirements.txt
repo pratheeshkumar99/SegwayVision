@@ -1,0 +1,8 @@
+torch>=1.9.0
+torchvision>=0.10.0
+albumentations>=1.0.3
+opencv-python>=4.5.3
+numpy>=1.19.5
+matplotlib>=3.4.3
+imutils>=0.5.4
+tqdm>=4.62.3
