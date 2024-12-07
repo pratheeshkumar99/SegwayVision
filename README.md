@@ -38,63 +38,43 @@ The FCN architecture transforms traditional classification networks into fully c
 - Replaces fully connected layers with 1x1 convolutions
 - Uses skip connections from earlier layers for fine-grained prediction
 - Multi-scale prediction fusion for better segmentation details
-
 ### 2. U-Net Architecture
 
 ```mermaid
-[<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
-    <!-- Background -->
-    <rect width="800" height="400" fill="#ffffff"/>
-    
-    <!-- Encoder Path -->
-    <g fill="#e6f3ff" stroke="#2980b9" stroke-width="2">
-        <!-- Input -->
-        <rect x="50" y="175" width="60" height="50" rx="5"/>
-        <!-- Conv Blocks -->
-        <rect x="130" y="150" width="60" height="100" rx="5"/>
-        <rect x="210" y="125" width="60" height="150" rx="5"/>
-        <rect x="290" y="100" width="60" height="200" rx="5"/>
-    </g>
+graph TD
+    subgraph Encoder
+        I[Input Image] --> C1[Conv Block 1]
+        C1 --> P1[MaxPool]
+        P1 --> C2[Conv Block 2]
+        C2 --> P2[MaxPool]
+        P2 --> C3[Conv Block 3]
+        C3 --> P3[MaxPool]
+        P3 --> C4[Conv Block 4]
+    end
 
-    <!-- Bottleneck -->
-    <rect x="370" y="175" width="60" height="50" fill="#fff3e6" stroke="#e67e22" stroke-width="2" rx="5"/>
+    subgraph Bottleneck
+        C4 --> B[Bottleneck]
+    end
 
-    <!-- Decoder Path -->
-    <g fill="#e6ffe6" stroke="#27ae60" stroke-width="2">
-        <!-- Upconv Blocks -->
-        <rect x="450" y="100" width="60" height="200" rx="5"/>
-        <rect x="530" y="125" width="60" height="150" rx="5"/>
-        <rect x="610" y="150" width="60" height="100" rx="5"/>
-        <!-- Output -->
-        <rect x="690" y="175" width="60" height="50" rx="5"/>
-    </g>
+    subgraph Decoder
+        B --> U1[UpConv 1]
+        U1 --> D1[Conv Block 5]
+        D1 --> U2[UpConv 2]
+        U2 --> D2[Conv Block 6]
+        D2 --> U3[UpConv 3]
+        U3 --> D3[Conv Block 7]
+        D3 --> O[Output]
+    end
 
-    <!-- Skip Connections -->
-    <g stroke="#95a5a6" stroke-width="2" stroke-dasharray="5,5">
-        <path d="M 240 150 L 500 150"/>
-        <path d="M 320 125 L 480 125"/>
-    </g>
+    %% Skip Connections
+    C1 -.-> D3
+    C2 -.-> D2
+    C3 -.-> D1
 
-    <!-- Labels -->
-    <g font-family="Arial" font-size="12" fill="#333">
-        <text x="55" y="205">Input</text>
-        <text x="135" y="205">Conv1</text>
-        <text x="215" y="205">Conv2</text>
-        <text x="295" y="205">Conv3</text>
-        <text x="375" y="205">Bridge</text>
-        <text x="455" y="205">Up3</text>
-        <text x="535" y="205">Up2</text>
-        <text x="615" y="205">Up1</text>
-        <text x="695" y="205">Output</text>
-    </g>
-</svg>]
-
-U-Net features a symmetric encoder-decoder structure that's particularly effective for detailed segmentation:
-- Contracting path (encoder) captures context
-- Expanding path (decoder) enables precise localization
-- Skip connections transfer detailed features from encoder to decoder
-- Particularly effective at preserving fine structural details
-- Our implementation uses a ResNet34 backbone for improved feature extraction
+    style I fill:#f9f,stroke:#333
+    style O fill:#9ff,stroke:#333
+    style B fill:#ff9,stroke:#333
+```
 
 ### 3. Pyramid Scene Parsing Network (PSPNet)
 ```mermaid
