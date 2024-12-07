@@ -11,10 +11,23 @@ class Visualizer:
         self.colors = list(config.COLORS.values())
     
     def visualize_batch(self, images: torch.Tensor, masks: torch.Tensor, 
-                       predictions: torch.Tensor, num_samples: int = 4):
-        """Visualize a batch of results."""
+                       predictions: torch.Tensor, num_samples: int = 4,
+                       save_path: Optional[str] = None):
+        """
+        Visualize a batch of results.
+        Args:
+            images: Batch of input images
+            masks: Batch of ground truth masks
+            predictions: Batch of predicted masks
+            num_samples: Number of samples to visualize
+            save_path: Optional path to save the visualization
+        """
         batch_size = min(num_samples, images.shape[0])
         fig, axes = plt.subplots(batch_size, 3, figsize=(15, 5*batch_size))
+        
+        # Handle single sample case
+        if batch_size == 1:
+            axes = axes.reshape(1, -1)
         
         for idx in range(batch_size):
             # Original image
@@ -36,7 +49,12 @@ class Visualizer:
             axes[idx, 2].axis('off')
         
         plt.tight_layout()
-        plt.show()
+        
+        if save_path:
+            plt.savefig(save_path, bbox_inches='tight', dpi=300)
+            plt.close()
+        else:
+            plt.show()
     
     def _denormalize_image(self, img: torch.Tensor) -> np.ndarray:
         """Denormalize and convert to numpy array."""
@@ -63,3 +81,38 @@ class Visualizer:
             colored_mask[mask == idx] = color
         
         return colored_mask
+    
+    def visualize_prediction(self, image: np.ndarray, prediction: torch.Tensor, 
+                           mask: Optional[np.ndarray] = None,
+                           save_path: Optional[str] = None):
+        """
+        Visualize a single prediction.
+        Args:
+            image: Input image
+            prediction: Predicted mask
+            mask: Optional ground truth mask
+            save_path: Optional path to save the visualization
+        """
+        fig, axes = plt.subplots(1, 2, figsize=(15, 5))
+        
+        # Original image
+        axes[0].imshow(image)
+        axes[0].set_title('Input Image')
+        axes[0].axis('off')
+        
+        # Prediction
+        pred = self._mask_to_color(prediction)
+        axes[1].imshow(pred)
+        axes[1].set_title('Prediction')
+        axes[1].axis('off')
+        
+        if mask is not None:
+            axes[0].imshow(mask, alpha=0.5)
+        
+        plt.tight_layout()
+        
+        if save_path:
+            plt.savefig(save_path, bbox_inches='tight', dpi=300)
+            plt.close()
+        else:
+            plt.show()

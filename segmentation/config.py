@@ -23,7 +23,7 @@ class SegmentationConfig:
     PATIENCE: int = 10 
     
     # Paths
-    DATA_DIR: str = str(Path('data/IDD/idd20k_lite').absolute())
+    DATA_DIR: str = str(Path('IDD_data/IDD/idd20k_lite').absolute())
     CHECKPOINT_DIR: str = str(Path('checkpoints').absolute())
     
     # Class colors for visualization - using default_factory
