@@ -5,7 +5,7 @@ from pathlib import Path
 
 def setup_dataset():
     """Download and setup the IDD dataset."""
-    data_dir = Path('data')
+    data_dir = Path('IDD_data')
     data_dir.mkdir(exist_ok=True)
     
     if not (data_dir / 'IDD').exists():

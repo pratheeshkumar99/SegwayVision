@@ -1,3 +1,4 @@
 checkpoints/
-data/
 segmentation.egg-info/
+TEST/
+IDD_data/
