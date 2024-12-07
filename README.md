@@ -23,6 +23,115 @@ The models are trained on the IDD-Lite dataset, which contains road scene images
 - Sky
 - Miscellaneous
 
+
+
+## Model Architectures
+This project implements five deep learning architectures, each with its unique strengths for semantic segmentation:
+
+### 1. Fully Convolutional Network (FCN)
+```mermaid
+[FCN diagram from previous response]
+```
+
+The FCN architecture transforms traditional classification networks into fully convolutional networks for semantic segmentation. Key features:
+- Based on VGG16 backbone
+- Replaces fully connected layers with 1x1 convolutions
+- Uses skip connections from earlier layers for fine-grained prediction
+- Multi-scale prediction fusion for better segmentation details
+
+### 2. U-Net Architecture
+
+```mermaid
+[graph TB
+    subgraph "Encoder Path"
+        I[Input Image] --> C1[Conv 3x3]
+        C1 --> C2[Conv 3x3]
+        C2 --> P1[MaxPool]
+        P1 --> C3[Conv 3x3]
+        C3 --> C4[Conv 3x3]
+        C4 --> P2[MaxPool]
+        P2 --> C5[Conv 3x3]
+        C5 --> C6[Conv 3x3]
+    end
+    
+    subgraph "Bottleneck"
+        C6 --> P3[MaxPool]
+        P3 --> B1[Conv 3x3]
+        B1 --> B2[Conv 3x3]
+    end
+    
+    subgraph "Decoder Path"
+        B2 --> U1[UpConv 2x2]
+        U1 --> CC1[Concat]
+        CC1 --> D1[Conv 3x3]
+        D1 --> D2[Conv 3x3]
+        D2 --> U2[UpConv 2x2]
+        U2 --> CC2[Concat]
+        CC2 --> D3[Conv 3x3]
+        D3 --> D4[Conv 3x3]
+        D4 --> O[Output]
+    end
+    
+    %% Skip Connections
+    C2 -.- CC2
+    C4 -.- CC1
+    
+    style I fill:#f9f,stroke:#333
+    style O fill:#9ff,stroke:#333]
+
+U-Net features a symmetric encoder-decoder structure that's particularly effective for detailed segmentation:
+- Contracting path (encoder) captures context
+- Expanding path (decoder) enables precise localization
+- Skip connections transfer detailed features from encoder to decoder
+- Particularly effective at preserving fine structural details
+- Our implementation uses a ResNet34 backbone for improved feature extraction
+
+### 3. Pyramid Scene Parsing Network (PSPNet)
+```mermaid
+[PSPNet diagram from previous response]
+```
+
+PSPNet excels at capturing global context through its pyramid pooling module:
+- Hierarchical global prior representation
+- Multi-scale feature extraction through pyramid pooling
+- Four levels of feature pooling (1×1, 2×2, 3×3, 6×6)
+- Especially effective for complex scene understanding
+- Better handling of objects at multiple scales
+
+### 4. LinkNet
+```mermaid
+[LinkNet diagram from previous response]
+```
+
+LinkNet is designed for efficient semantic segmentation:
+- Memory-efficient architecture with strong performance
+- Direct connections between encoder and decoder blocks
+- Residual connections for better gradient flow
+- Lighter computational footprint compared to U-Net
+- Ideal for real-time applications
+
+### 5. DeepLabV3+
+```mermaid
+[DeepLabV3+ diagram from previous response]
+```
+
+DeepLabV3+ represents the state-of-the-art in semantic segmentation:
+- Atrous Spatial Pyramid Pooling (ASPP) for multi-scale processing
+- Multiple dilation rates (6, 12, 18) for broader receptive fields
+- Encoder-decoder structure with ASPP module
+- Fusion of low-level and high-level features
+- Superior performance on boundary regions
+
+## Architecture Comparison
+
+| Architecture | Strengths | Best Use Cases | Memory Usage | Inference Speed |
+|--------------|-----------|----------------|--------------|-----------------|
+| FCN          | Simple, effective baseline | General segmentation | Medium | Fast |
+| U-Net        | Fine detail preservation | Medical imaging, detailed segmentation | High | Medium |
+| PSPNet       | Global context understanding | Complex scene parsing | High | Medium |
+| LinkNet      | Efficiency, good performance | Real-time applications | Low | Fast |
+| DeepLabV3+   | State-of-the-art accuracy | High-accuracy requirements | High | Slow |
+
 ## Results
 
 Model performance comparison on IDD-Lite dataset:
@@ -130,14 +239,4 @@ prediction = model.predict(image)
 ├── setup_data.py
 └── config.yaml
 ```
-
-## Model Architectures
-
-The project implements five different architectures for comparison:
-
-1. **FCN**: Fully Convolutional Network with VGG16 backbone
-2. **U-Net**: Classic encoder-decoder architecture with skip connections
-3. **PSPNet**: Pyramid Scene Parsing Network
-4. **LinkNet**: Efficient encoder-decoder with residual connections
-5. **DeepLabV3+**: State-of-the-art architecture with ASPP module
 
