@@ -2,8 +2,6 @@
 
 A PyTorch-based implementation of various deep learning architectures for semantic segmentation of unstructured road scenes using the Indian Driving Dataset (IDD).
 
-![Model Results](IMAGES/results.png)
-
 ## Project Overview
 
 This project implements and compares five popular deep learning architectures for semantic segmentation:
@@ -29,8 +27,35 @@ The models are trained on the IDD-Lite dataset, which contains road scene images
 This project implements five deep learning architectures, each with its unique strengths for semantic segmentation:
 
 ### 1. Fully Convolutional Network (FCN)
+
 ```mermaid
-[FCN diagram from previous response]
+graph LR
+    subgraph VGG16_Backbone
+        I[Input] --> C1[Conv Block 1]
+        C1 --> C2[Conv Block 2]
+        C2 --> C3[Conv Block 3]
+        C3 --> C4[Conv Block 4]
+        C4 --> C5[Conv Block 5]
+    end
+    subgraph FCN_Head
+        C5 --> FC6[Conv 7x7]
+        FC6 --> FC7[Conv 1x1]
+        FC7 --> S1[Score]
+    end
+    subgraph Skip_Connections
+        C4 --> S2[Score Pool4]
+        C3 --> S3[Score Pool3]
+        S1 --> U1[Upsample 2x]
+        U1 --> F1[Fuse]
+        S2 --> F1
+        F1 --> U2[Upsample 2x]
+        U2 --> F2[Fuse]
+        S3 --> F2
+        F2 --> U3[Upsample 8x]
+        U3 --> O[Output]
+    end
+    style I fill:#f9f,stroke:#333
+    style O fill:#9ff,stroke:#333
 ```
 
 The FCN architecture transforms traditional classification networks into fully convolutional networks for semantic segmentation. Key features:
@@ -38,6 +63,7 @@ The FCN architecture transforms traditional classification networks into fully c
 - Replaces fully connected layers with 1x1 convolutions
 - Uses skip connections from earlier layers for fine-grained prediction
 - Multi-scale prediction fusion for better segmentation details
+
 ### 2. U-Net Architecture
 
 ```mermaid
@@ -78,7 +104,33 @@ graph TD
 
 ### 3. Pyramid Scene Parsing Network (PSPNet)
 ```mermaid
-[PSPNet diagram from previous response]
+graph TD
+    subgraph Backbone
+        I[Input] --> B[ResNet]
+        B --> F[Feature Map]
+    end
+    subgraph Pyramid_Pooling
+        F --> P1[Pool 1x1]
+        F --> P2[Pool 2x2]
+        F --> P3[Pool 3x3]
+        F --> P4[Pool 6x6]
+        P1 --> U1[Upsample]
+        P2 --> U2[Upsample]
+        P3 --> U3[Upsample]
+        P4 --> U4[Upsample]
+    end
+    subgraph Final_Layers
+        U1 --> C[Concat]
+        U2 --> C
+        U3 --> C
+        U4 --> C
+        F --> C
+        C --> Conv[Conv 1x1]
+        Conv --> Up[Upsample 8x]
+        Up --> O[Output]
+    end
+    style I fill:#f9f,stroke:#333
+    style O fill:#9ff,stroke:#333
 ```
 
 PSPNet excels at capturing global context through its pyramid pooling module:
@@ -90,7 +142,28 @@ PSPNet excels at capturing global context through its pyramid pooling module:
 
 ### 4. LinkNet
 ```mermaid
-[LinkNet diagram from previous response]
+graph TD
+    subgraph Encoder
+        I[Input] --> E1[Encoder Block 1]
+        E1 --> E2[Encoder Block 2]
+        E2 --> E3[Encoder Block 3]
+        E3 --> E4[Encoder Block 4]
+    end
+    subgraph Decoder
+        E4 --> D4[Decoder Block 4]
+        D4 --> D3[Decoder Block 3]
+        D3 --> D2[Decoder Block 2]
+        D2 --> D1[Decoder Block 1]
+    end
+    %% Skip Connections
+    E1 -.-> D1
+    E2 -.-> D2
+    E3 -.-> D3
+    E4 -.-> D4
+    D1 --> F[Final Conv]
+    F --> O[Output]
+    style I fill:#f9f,stroke:#333
+    style O fill:#9ff,stroke:#333
 ```
 
 LinkNet is designed for efficient semantic segmentation:
@@ -102,7 +175,31 @@ LinkNet is designed for efficient semantic segmentation:
 
 ### 5. DeepLabV3+
 ```mermaid
-[DeepLabV3+ diagram from previous response]
+graph TD
+    subgraph Encoder
+        I[Input] --> B[Backbone]
+        B --> ASPP{ASPP Module}
+    end
+    subgraph ASPP_Module
+        ASPP --> A1[1x1 Conv]
+        ASPP --> A2[3x3 Rate 6]
+        ASPP --> A3[3x3 Rate 12]
+        ASPP --> A4[3x3 Rate 18]
+        ASPP --> A5[Global Pool]
+    end
+    subgraph Decoder
+        A1 & A2 & A3 & A4 & A5 --> C[Concat]
+        C --> C1[Conv 1x1]
+        B --> LF[Low-level Features]
+        LF --> C2[Conv 1x1]
+        C1 --> U1[Upsample 4x]
+        U1 --> M[Merge]
+        C2 --> M
+        M --> U2[Upsample 4x]
+        U2 --> O[Output]
+    end
+    style I fill:#f9f,stroke:#333
+    style O fill:#9ff,stroke:#333
 ```
 
 DeepLabV3+ represents the state-of-the-art in semantic segmentation:
@@ -133,6 +230,11 @@ Model performance comparison on IDD-Lite dataset:
 | PSPNET       | 0.9172      | 0.7385      | 0.733        |
 | LINKNET      | 0.9231      | 0.7579      | 0.750        |
 | DEEPLABV3+   | 0.8040      | 0.7712      | 0.787        |
+
+
+![Model Results](IMAGES/results.png)
+
+
 
 ## Installation
 
