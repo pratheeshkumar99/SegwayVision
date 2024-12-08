@@ -7,17 +7,16 @@ A PyTorch-based implementation of various deep learning architectures for semant
 - [Dataset](#dataset)
 - [Model Architectures](#model-architectures)
   - [FCN](#1-fully-convolutional-network-fcn)
-  - [U-Net](#2-u-net-architecture)
-  - [PSPNet](#3-pyramid-scene-parsing-network-pspnet)
+  - [PSPNet](#2-pyramid-scene-parsing-network-pspnet)
+  - [U-Net](#3-u-net-architecture)
   - [LinkNet](#4-linknet)
   - [DeepLabV3+](#5-deeplabv3)
+- [Architecture-Comparision](#architecture-comparison)
 - [Results](#results)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-- [Citation](#citation)
+
 
 ## Overview
 
