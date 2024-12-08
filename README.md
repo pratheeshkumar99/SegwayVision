@@ -2,7 +2,24 @@
 
 A PyTorch-based implementation of various deep learning architectures for semantic segmentation of unstructured road scenes using the Indian Driving Dataset (IDD).
 
-## Project Overview
+## Table of Contents
+- [Overview](#Overview)
+- [Dataset](#dataset)
+- [Model Architectures](#model-architectures)
+  - [FCN](#1-fully-convolutional-network-fcn)
+  - [U-Net](#2-u-net-architecture)
+  - [PSPNet](#3-pyramid-scene-parsing-network-pspnet)
+  - [LinkNet](#4-linknet)
+  - [DeepLabV3+](#5-deeplabv3)
+- [Results](#results)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+- [Citation](#citation)
+
+## Overview
 
 This project implements and compares five popular deep learning architectures for semantic segmentation:
 - FCN (Fully Convolutional Network)
@@ -10,6 +27,8 @@ This project implements and compares five popular deep learning architectures fo
 - PSPNet
 - LinkNet
 - DeepLabV3+
+
+## Dataset
 
 The models are trained on the IDD-Lite dataset, which contains road scene images from Indian cities, annotated with 8 classes:
 - Drivable area
@@ -20,7 +39,6 @@ The models are trained on the IDD-Lite dataset, which contains road scene images
 - Far objects
 - Sky
 - Miscellaneous
-
 
 
 ## Model Architectures
@@ -64,7 +82,46 @@ The FCN architecture transforms traditional classification networks into fully c
 - Uses skip connections from earlier layers for fine-grained prediction
 - Multi-scale prediction fusion for better segmentation details
 
-### 2. U-Net Architecture
+
+### 2. Pyramid Scene Parsing Network (PSPNet)
+```mermaid
+graph TD
+    subgraph Backbone
+        I[Input] --> B[ResNet]
+        B --> F[Feature Map]
+    end
+    subgraph Pyramid_Pooling
+        F --> P1[Pool 1x1]
+        F --> P2[Pool 2x2]
+        F --> P3[Pool 3x3]
+        F --> P4[Pool 6x6]
+        P1 --> U1[Upsample]
+        P2 --> U2[Upsample]
+        P3 --> U3[Upsample]
+        P4 --> U4[Upsample]
+    end
+    subgraph Final_Layers
+        U1 --> C[Concat]
+        U2 --> C
+        U3 --> C
+        U4 --> C
+        F --> C
+        C --> Conv[Conv 1x1]
+        Conv --> Up[Upsample 8x]
+        Up --> O[Output]
+    end
+    style I fill:#f9f,stroke:#333
+    style O fill:#9ff,stroke:#333
+```
+
+PSPNet excels at capturing global context through its pyramid pooling module:
+- Hierarchical global prior representation
+- Multi-scale feature extraction through pyramid pooling
+- Four levels of feature pooling (1×1, 2×2, 3×3, 6×6)
+- Especially effective for complex scene understanding
+- Better handling of objects at multiple scales
+
+### 3. U-Net Architecture
 
 ```mermaid
 graph TD
@@ -102,43 +159,13 @@ graph TD
     style B fill:#ff9,stroke:#333
 ```
 
-### 3. Pyramid Scene Parsing Network (PSPNet)
-```mermaid
-graph TD
-    subgraph Backbone
-        I[Input] --> B[ResNet]
-        B --> F[Feature Map]
-    end
-    subgraph Pyramid_Pooling
-        F --> P1[Pool 1x1]
-        F --> P2[Pool 2x2]
-        F --> P3[Pool 3x3]
-        F --> P4[Pool 6x6]
-        P1 --> U1[Upsample]
-        P2 --> U2[Upsample]
-        P3 --> U3[Upsample]
-        P4 --> U4[Upsample]
-    end
-    subgraph Final_Layers
-        U1 --> C[Concat]
-        U2 --> C
-        U3 --> C
-        U4 --> C
-        F --> C
-        C --> Conv[Conv 1x1]
-        Conv --> Up[Upsample 8x]
-        Up --> O[Output]
-    end
-    style I fill:#f9f,stroke:#333
-    style O fill:#9ff,stroke:#333
-```
+The U-Net architecture features a symmetric encoder-decoder structure that's particularly effective for detailed segmentation:
+- Contracting path (encoder) captures context
+- Expanding path (decoder) enables precise localization
+- Skip connections transfer detailed features from encoder to decoder
+- Particularly effective at preserving fine structural details
 
-PSPNet excels at capturing global context through its pyramid pooling module:
-- Hierarchical global prior representation
-- Multi-scale feature extraction through pyramid pooling
-- Four levels of feature pooling (1×1, 2×2, 3×3, 6×6)
-- Especially effective for complex scene understanding
-- Better handling of objects at multiple scales
+
 
 ### 4. LinkNet
 ```mermaid
