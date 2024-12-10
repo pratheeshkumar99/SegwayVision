@@ -7,10 +7,9 @@ A PyTorch-based implementation of various deep learning architectures for semant
 - [Dataset](#dataset)
 - [Model Architectures](#model-architectures)
   - [FCN](#1-fully-convolutional-network-fcn)
-  - [PSPNet](#2-pyramid-scene-parsing-network-pspnet)
-  - [U-Net](#3-u-net-architecture)
-  - [LinkNet](#4-linknet)
-  - [DeepLabV3+](#5-deeplabv3)
+  - [U-Net](#2-u-net-architecture)
+  - [LinkNet](#3-linknet)
+  - [DeepLabV3+](#4-deeplabv3)
 - [Architecture-Comparision](#architecture-comparison)
 - [Results](#results)
 - [Installation](#installation)
@@ -81,46 +80,7 @@ The FCN architecture transforms traditional classification networks into fully c
 - Uses skip connections from earlier layers for fine-grained prediction
 - Multi-scale prediction fusion for better segmentation details
 
-
-### 2. Pyramid Scene Parsing Network (PSPNet)
-```mermaid
-graph TD
-    subgraph Backbone
-        I[Input] --> B[ResNet]
-        B --> F[Feature Map]
-    end
-    subgraph Pyramid_Pooling
-        F --> P1[Pool 1x1]
-        F --> P2[Pool 2x2]
-        F --> P3[Pool 3x3]
-        F --> P4[Pool 6x6]
-        P1 --> U1[Upsample]
-        P2 --> U2[Upsample]
-        P3 --> U3[Upsample]
-        P4 --> U4[Upsample]
-    end
-    subgraph Final_Layers
-        U1 --> C[Concat]
-        U2 --> C
-        U3 --> C
-        U4 --> C
-        F --> C
-        C --> Conv[Conv 1x1]
-        Conv --> Up[Upsample 8x]
-        Up --> O[Output]
-    end
-    style I fill:#f9f,stroke:#333
-    style O fill:#9ff,stroke:#333
-```
-
-PSPNet excels at capturing global context through its pyramid pooling module:
-- Hierarchical global prior representation
-- Multi-scale feature extraction through pyramid pooling
-- Four levels of feature pooling (1×1, 2×2, 3×3, 6×6)
-- Especially effective for complex scene understanding
-- Better handling of objects at multiple scales
-
-### 3. U-Net Architecture
+### 2. U-Net Architecture
 
 ```mermaid
 graph TD
@@ -166,7 +126,7 @@ The U-Net architecture features a symmetric encoder-decoder structure that's par
 
 
 
-### 4. LinkNet
+### 3. LinkNet
 ```mermaid
 graph TD
     subgraph Encoder
@@ -199,7 +159,7 @@ LinkNet is designed for efficient semantic segmentation:
 - Lighter computational footprint compared to U-Net
 - Ideal for real-time applications
 
-### 5. DeepLabV3+
+### 4. DeepLabV3+
 ```mermaid
 graph TD
     subgraph Encoder
@@ -241,7 +201,6 @@ DeepLabV3+ represents the state-of-the-art in semantic segmentation:
 |--------------|-----------|----------------|--------------|-----------------|
 | FCN          | Simple, effective baseline | General segmentation | Medium | Fast |
 | U-Net        | Fine detail preservation | Medical imaging, detailed segmentation | High | Medium |
-| PSPNet       | Global context understanding | Complex scene parsing | High | Medium |
 | LinkNet      | Efficiency, good performance | Real-time applications | Low | Fast |
 | DeepLabV3+   | State-of-the-art accuracy | High-accuracy requirements | High | Slow |
 
@@ -253,7 +212,6 @@ Model performance comparison on IDD-Lite dataset:
 |--------------|-------------|-------------|---------------|
 | FCN          | 0.9032      | 0.9034      | 0.687        |
 | UNET         | 0.8784      | 0.7406      | 0.586        |
-| PSPNET       | 0.9172      | 0.7385      | 0.733        |
 | LINKNET      | 0.9231      | 0.7579      | 0.750        |
 | DEEPLABV3+   | 0.8040      | 0.7712      | 0.787        |
 
@@ -346,7 +304,6 @@ prediction = model.predict(image)
 │   ├── models/
 │   │   ├── fcn.py
 │   │   ├── unet.py
-│   │   ├── pspnet.py
 │   │   ├── linknet.py
 │   │   └── deeplabv3.py
 │   ├── config.py
