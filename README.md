@@ -263,7 +263,7 @@ python train.py --config config.yaml
 
 Configure training parameters in `config.yaml`:
 ```yaml
-MODEL_TYPE: 'unet'  # Options: 'fcn', 'unet', 'pspnet', 'linknet', 'deeplabv3'
+MODEL_TYPE: 'unet'  # Options: 'fcn', 'unet', 'linknet', 'deeplabv3'
 BACKBONE: 'resnet34'
 NUM_CLASSES: 8
 BATCH_SIZE: 16
