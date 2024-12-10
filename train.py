@@ -40,11 +40,11 @@ def train(config: SegmentationConfig):
     
     # Create datasets and dataloaders
     logger.info("Creating datasets...")
-    train_dataset = SegmentationDataset(config, mode='train')
+    train_dataset = SegmentationDataset(config, mode='train')  # Create the training dataset using the SegmentationDataset class.
     train_size = len(train_dataset)
 
     print(f"Training dataset size: {train_size}")
-    val_dataset = SegmentationDataset(config, mode='val')
+    val_dataset = SegmentationDataset(config, mode='val')  # Create the validation dataset using the SegmentationDataset class.
 
     val_size = len(val_dataset)
     print(f"Validation dataset size: {val_size}")
@@ -52,8 +52,8 @@ def train(config: SegmentationConfig):
 
     print("\n\n\n\n\n\n\n\n\n")
     
-    train_loader = get_dataloader(train_dataset, config)
-    val_loader = get_dataloader(val_dataset, config)
+    train_loader = get_dataloader(train_dataset, config) # Create the training dataloader using the get_dataloader function
+    val_loader = get_dataloader(val_dataset, config) # Create the validation dataloader using the get_dataloader function
     
     # Initialize model
     logger.info(f"Initializing {config.MODEL_TYPE} model...")
@@ -94,11 +94,11 @@ def main():
         with open(args.config, 'r') as f:
             config_dict = yaml.safe_load(f)
             for k, v in config_dict.items():
-                setattr(config, k, v)
+                setattr(config, k, v) # Updating the config object with the values from the YAML file
 
     # Setup logging and create directories
-    os.makedirs(config.CHECKPOINT_DIR, exist_ok=True)
-    setup_logging(config.CHECKPOINT_DIR)
+    os.makedirs(config.CHECKPOINT_DIR, exist_ok=True) # Create the checkpoint directory if it doesn't exist
+    setup_logging(config.CHECKPOINT_DIR) # Setup logging configuration
 
     # Print device and availability
     print(f"PyTorch MPS available: {torch.backends.mps.is_available()}")

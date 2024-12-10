@@ -12,7 +12,7 @@ class SegmentationConfig:
     MODEL_TYPE: str = 'linknet'  # ['fcn', 'linknet', 'unet', 'deeplabv3']
     BACKBONE: str = 'resnet34'
     NUM_CLASSES: int = 8
-    INPUT_SHAPE: Tuple[int, int, int] = (256, 256, 3)
+    INPUT_SHAPE: Tuple[int, int, int] = (256, 256, 3) # (height, width, channels) ----> (256, 256, 3)
     
     # Training parameters
     BATCH_SIZE: int = 16
@@ -23,8 +23,8 @@ class SegmentationConfig:
     PATIENCE: int = 10 
     
     # Paths
-    DATA_DIR: str = str(Path('IDD_data/IDD/idd20k_lite').absolute())
-    CHECKPOINT_DIR: str = str(Path('checkpoints').absolute())
+    DATA_DIR: str = str(Path('IDD_data/IDD/idd20k_lite').absolute()) # Path to IDD dataset ----> ./IDD_data/IDD/idd20k_lite
+    CHECKPOINT_DIR: str = str(Path('checkpoints').absolute()) # Path to save checkpoints ----> ./checkpoints
     
     # Class colors for visualization - using default_factory
     COLORS: Dict[str, Tuple[int, int, int]] = field(default_factory=lambda: {
