@@ -3,7 +3,9 @@ import numpy as np
 from typing import Dict
 
 class SegmentationMetrics:
-    """Metrics for segmentation evaluation."""
+    """"
+    This mehtod takes in the predicted and true masks and calculates the dice coefficient.
+    """""
     @staticmethod
     def dice_coefficient(y_pred: torch.Tensor, y_true: torch.Tensor, 
                         smooth: float = 1e-6) -> torch.Tensor:
@@ -17,6 +19,10 @@ class SegmentationMetrics:
         
         return (2. * intersection + smooth) / (union + smooth)
 
+
+    """
+    This method takes in the predicted and true masks and calculates the iou coefficient.
+    """
     @staticmethod
     def iou_coefficient(y_pred: torch.Tensor, y_true: torch.Tensor, 
                        smooth: float = 1e-6) -> torch.Tensor:
@@ -30,6 +36,10 @@ class SegmentationMetrics:
         
         return (intersection + smooth) / (union + smooth)
 
+
+    """
+    This method takes in the predicted and true masks and calculates the dice and iou coefficients.
+    """
     @staticmethod
     def calculate_metrics(y_pred: torch.Tensor, y_true: torch.Tensor) -> Dict[str, float]:
         """Calculate all metrics."""

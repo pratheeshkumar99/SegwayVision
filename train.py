@@ -57,13 +57,17 @@ def train(config: SegmentationConfig):
     
     # Initialize model
     logger.info(f"Initializing {config.MODEL_TYPE} model...")
-    model = get_model(config.MODEL_TYPE, config)
-    model = model.to(config.DEVICE)
+    model = get_model(config.MODEL_TYPE, config) # Get the model based on the model type
+    model = model.to(config.DEVICE) # Move the model to the device
     
-    criterion = torch.nn.CrossEntropyLoss()
+    criterion = torch.nn.CrossEntropyLoss() # Define the loss function: CrossEntropyLoss //The reason this loss function is used because this is multi-class segmentation problem where each pixel can belong to one of the 8 classes and the model is trained to predict the class of each pixel. The CrossEntropyLoss function is used to calculate the loss between the predicted and ground truth masks.
     optimizer = torch.optim.Adam(model.parameters(), lr=config.LEARNING_RATE)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.1, patience=5, verbose=True
+        optimizer, # The optimizer object
+        mode='min', # The mode to monitor the metric, ie specify whether to monitor the metric for increase or decrease
+        factor=0.1, # Factor by which the learning rate will be reduced. new_lr = lr * factor
+        patience=5, # Number of epochs with no improvement after which learning rate will be reduced
+        verbose=True # If True, prints a message to stdout for each update
     )
 
     # Train model

@@ -9,15 +9,21 @@ from ..utils.metrics import SegmentationMetrics
 
 logger = logging.getLogger(__name__)
 
+
+"""
+The base class BaseModel is defined in the models/base.py file. This class is the parent class for all segmentation models and contains common functionality such as training, validation, and model saving/loading. The BaseModel class is a subclass of nn.Module and implements the forward method, which must be implemented by all subclasses.
+All segmentation models should inherit from the BaseModel class and implement the forward method to define the model architecture. The BaseModel class provides methods for training the model, calculating metrics, and saving/loading model checkpoints.
+"""
+
 class BaseModel(nn.Module):
     """Base class for all segmentation models."""
     
     def __init__(self, config: 'SegmentationConfig'):
         super().__init__()
-        self.config = config
-        self.metrics = SegmentationMetrics()
+        self.config = config # Initialize the config in the base class.
+        self.metrics = SegmentationMetrics() # Initliaze the SegmentationMetrics  in the base class.
     
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:  # Forward pass to be implemented by subclasses.
         """Forward pass to be implemented by subclasses."""
         raise NotImplementedError
     
@@ -28,7 +34,7 @@ class BaseModel(nn.Module):
         criterion: nn.Module,
         optimizer: torch.optim.Optimizer,
         scheduler: Optional[Any] = None
-    ) -> Dict[str, list]:
+    ) -> Dict[str, list]:  # This is method common to all the segmentation models which is used to train the model and would be inherited by all the models.
         
         """Training loop with validation."""
         device = torch.device(self.config.DEVICE)
@@ -49,16 +55,16 @@ class BaseModel(nn.Module):
             self.train()
             train_metrics = self._train_epoch(
                 train_loader, criterion, optimizer, device
-            )
+            )  # Train the model for one epoch.
             
             # Validation phase
             self.eval()
-            val_metrics = self._validate_epoch(val_loader, criterion, device)
+            val_metrics = self._validate_epoch(val_loader, criterion, device) # Validate the model for one epoch.
             
             # Update learning rate
             if scheduler is not None:
                 if isinstance(scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
-                    scheduler.step(val_metrics['loss'])
+                    scheduler.step(val_metrics['loss'])   # Reduces the learning rate when the validation loss stops improving. 
                 else:
                     scheduler.step()
             
@@ -78,7 +84,7 @@ class BaseModel(nn.Module):
             # Log progress
             self._log_epoch(epoch, train_metrics, val_metrics)
             
-            # Early stopping
+            # Early stopping if the validation loss does not improve
             if patience_counter >= self.config.PATIENCE:
                 logger.info("Early stopping triggered")
                 break
@@ -112,7 +118,7 @@ class BaseModel(nn.Module):
             optimizer.step()
             
             # Calculate metrics
-            metrics = self.metrics.calculate_metrics(outputs, masks)
+            metrics = self.metrics.calculate_metrics(outputs, masks) # Calculate the dice and iou metrics for mdoel predictions and ground truth masks.
             
             # Update running metrics
             epoch_loss += loss.item()
@@ -133,6 +139,10 @@ class BaseModel(nn.Module):
             'dice': epoch_dice / num_batches
         }
     
+
+    """
+    This metnod is used to validate the model for one epoch. It takes in the validation loader, criterion and device as input and returns the validation loss, iou and dice coefficients.
+    """
     def _validate_epoch(
         self,
         val_loader: DataLoader,
