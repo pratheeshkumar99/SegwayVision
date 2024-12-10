@@ -5,6 +5,14 @@ import torch
 import os
 from pathlib import Path
 
+"""
+This class contains the configuration for the segmentation model. It contains the following parameters:
+1. Model parameters: MODEL_TYPE, BACKBONE, NUM_CLASSES, INPUT_SHAPE
+2. Training parameters: BATCH_SIZE, EPOCHS, LEARNING_RATE, DEVICE, NUM_WORKERS, PATIENCE
+3. Paths: DATA_DIR, CHECKPOINT_DIR
+4. Class colors for visualization: COLORS
+"""
+
 @dataclass
 class SegmentationConfig:
     """Configuration for segmentation models."""

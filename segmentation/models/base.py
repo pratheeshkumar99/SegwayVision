@@ -27,6 +27,10 @@ class BaseModel(nn.Module):
         """Forward pass to be implemented by subclasses."""
         raise NotImplementedError
     
+    """
+    This method is used to train the model. It takes in the training loader, validation loader, criterion, optimizer and scheduler as input and returns the training history. This method is actually inherited by all the models and is used to train the model and return the training history.
+    """
+    
     def train_model(
         self,
         train_loader: DataLoader,
@@ -90,6 +94,10 @@ class BaseModel(nn.Module):
                 break
         
         return history
+    
+    """
+    This  method is used to train the model for one epoch. It takes in the training loader, criterion, optimizer and device as input and returns the training loss, iou and dice coefficients.
+    """
     
     def _train_epoch(
         self,
@@ -180,6 +188,10 @@ class BaseModel(nn.Module):
             'dice': epoch_dice / num_batches
         }
     
+
+    """
+    This method is used to log the epoch metrics. It takes in the epoch number, training metrics and validation metrics as input and logs the epoch number, training loss, training iou, training dice, validation loss, validation iou and validation dice.
+    """
     def _log_epoch(
         self,
         epoch: int,

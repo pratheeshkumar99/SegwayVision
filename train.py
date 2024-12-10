@@ -1,3 +1,14 @@
+### The code has been written using OOPs concepts. The code has been divided into multiple classes and methods to make it more modular and reusable. The code has been divided into the following classes:
+# 1. SegmentationConfig : This class is used to store configuration parameters for the segmentation models. It uses dataclasses to define the configuration parameters and their default values. The __post_init__ method is used to create necessary directories and check if the data directory exists.
+# 2. BaseModel : This is the base class for all segmentation models. It is a subclass of nn.Module and contains common functionality such as training, validation, and model saving/loading. It implements the forward method, which must be implemented by all subclasses. It also contains the train_model method, which is used to train the model and calculate metrics.
+# 3. FCN : This class implements the Fully Convolutional Network (FCN) model for semantic segmentation. It is a subclass of BaseModel and implements the forward method to define the model architecture. It also contains the FCNDecoder class, which implements the decoder with skip connections.
+# 4. SegmentationDataset : This class is used to create PyTorch datasets for segmentation tasks. It is a subclass of torch.utils.data.Dataset and implements the __len__ and __getitem__ methods to load images and masks. It uses the Albumentations library for data augmentation.
+# 5. Augmentation : This class contains static methods to get training and validation transforms using the Albumentations library. The get_train_transforms method returns a list of augmentation transforms for training, while the get_val_transforms method returns a list of transforms for validation.
+# 6. Visualizer : This class is used to visualize the model predictions and ground truth masks. It contains methods to plot images, masks, and predictions using Matplotlib.
+# 7. train : This function is the main training function that creates datasets, dataloaders, and the model. It trains the model using the train_model method and saves the final model.
+# 8. UNet, LinkNet, DeepLabV3 : These classes implement the UNet, LinkNet, and DeepLabV3 models for semantic segmentation. They are subclasses of BaseModel and implement the forward method to define the model architecture.
+
+
 import argparse
 import yaml
 import logging
