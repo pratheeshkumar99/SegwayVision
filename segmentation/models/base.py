@@ -224,3 +224,32 @@ class BaseModel(nn.Module):
         checkpoint = torch.load(path)
         self.load_state_dict(checkpoint['model_state_dict'])
         logger.info(f"Checkpoint loaded from {path}")
+
+
+
+
+
+
+
+
+
+
+        """
+        Information about the Inheriting mdoels from the BaseModel class:
+
+        Here is a table comparing the key differences between the FCN with VGG-19 backbone, U-Net, and LinkNet architectures, with comments:
+
+        | Feature | FCN with VGG-19 | U-Net | LinkNet |
+        | --- | --- | --- | --- |
+        | Encoder Architecture | Uses pre-trained VGG-19 model | Uses custom convolutional layers | Uses pre-trained ResNet-34 model |
+        | # FCN with VGG-19 leverages the pre-trained features of VGG-19, enabling transfer learning and potentially better performance with limited data. | # U-Net learns the features from scratch, providing more flexibility to adapt to the specific task and dataset. | # LinkNet combines the benefits of using a pre-trained encoder (ResNet-34) with the flexibility of a symmetric encoder-decoder architecture. |
+        | Upsampling Method | Bilinear interpolation | Transposed convolution | Transposed convolution |
+        | # FCN with VGG-19 uses a simpler upsampling method (bilinear interpolation), which may be less accurate but computationally more efficient. | # U-Net uses transposed convolution (deconvolution) layers for upsampling, which can learn the upsampling parameters during training. | # Like U-Net, LinkNet also uses transposed convolution layers for upsampling in the decoder. |
+        | Skip Connections | Concatenation | Concatenation | Addition |
+        | # FCN with VGG-19 uses concatenation-based skip connections, combining the encoder and decoder features. | # U-Net also uses concatenation-based skip connections, similar to FCN with VGG-19. | # LinkNet uses additive skip connections, where the encoder features are added to the decoder features. |
+        | Architectural Symmetry | Asymmetric (heavier encoder, lighter decoder) | Symmetric (matching encoder-decoder structure) | Symmetric (matching encoder-decoder structure) |
+        | # The asymmetric nature of FCN with VGG-19 may result in a more efficient inference, but the U-Net and LinkNet symmetric architectures can potentially learn better features. | # The symmetric structure of U-Net allows for a more balanced feature learning between the encoder and decoder. | # The symmetric encoder-decoder structure of LinkNet also allows for a more balanced feature learning. |
+        | Use Cases | Better for transfer learning and limited data | Better for learning from scratch and full control over feature learning | Combines the benefits of pre-trained encoder and flexible architecture |
+        | # FCN with VGG-19 is particularly suitable for transfer learning applications and scenarios with limited training data, as it can leverage the pre-trained VGG-19 features. | # U-Net is a better choice when you want to learn the features from scratch and have full control over the model architecture. | # LinkNet can be a good compromise, allowing you to use a pre-trained encoder (ResNet-34) while maintaining the flexibility of a symmetric encoder-decoder structure. |
+                
+                """
